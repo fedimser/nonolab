@@ -43,7 +43,11 @@ public class NonogramDrawer {
         return drawFull(des, null);
     }
 
-    public static RenderedImage drawFull(NonogramDescription des, NonogramSolution sol) {
+    public static RenderedImage drawFull(NonogramSolution sol) {
+        return drawFull(new NonogramDescription(sol), sol);
+    }
+
+    private static RenderedImage drawFull(NonogramDescription des, NonogramSolution sol) {
         int w1 = des.getDescriptionWidth();
         int h1 = des.getDescriptionHeight();
         int w2 = des.getWidth();

@@ -27,6 +27,7 @@ public class Solver {
     private int height;
     private CellState[][] cells;
     private NonogramDescription descr;
+    private SolveResult solveResult;
 
     private List<CellState> curRow;
     private BitArray curRowBits;
@@ -37,7 +38,7 @@ public class Solver {
     private boolean curRowImpossible;
 
     private boolean verbose=false;
-    public NonogramSolution solution;
+    private NonogramSolution counterExample;
 
     /**
      * Returns true if row was modified.
@@ -186,6 +187,7 @@ public class Solver {
         this.height = descr.getHeight();
         this.descr = descr;
         this.cells = new CellState[width][height];
+        this.solveResult = SolveResult.NOT_ATTEMPTED;
 
         for(int x=0;x<width;x++) {
             for (int y = 0; y < height; y++) {
@@ -238,8 +240,10 @@ public class Solver {
      */
     public NonogramSolution solve() {
         if(solveRec() == SolveResult.IMPOSSIBLE) {
+            solveResult = SolveResult.IMPOSSIBLE;
             return null;
         } else {
+            solveResult = SolveResult.SOLVED;
             return new NonogramSolution(cells);
         }
     }
@@ -247,13 +251,52 @@ public class Solver {
     private CellState[][] cloneCells() {
         CellState[][] ret = new CellState[width][height];
         for(int x=0;x<width;x++) {
-            System.arraycopy(cells,0,ret, 0, width);
+            for(int y=0;y<height;y++) {
+                ret[x][y] = cells[x][y];
+            }
+            //System.arraycopy(cells,0,ret, 0, height);
         }
         return ret;
     }
 
 
+    private CellState flipState(CellState x) {
+        if(x==CellState.FILLED) return CellState.EMPTY;
+        else if (x==CellState.EMPTY) return CellState.FILLED;
+        else return x;
+    }
+
     public boolean hasUniqueSolution() {
-        return false;
+        if(solveResult == SolveResult.NOT_ATTEMPTED) throw new IllegalStateException("Solution haven't been performed.");
+        if(solveResult == SolveResult.IMPOSSIBLE) return false;
+        if(solveResult == SolveResult.AMBIGUOUS) return false;
+        assert (solveResult == SolveResult.SOLVED);
+
+        CellState[][] backupCells = cloneCells();
+        boolean unique = true;
+        for(int x=0;x<width;x++) {
+            for(int y=0;y<height;y++) {
+                for(int x1=0;x1<width;x1++)
+                    for(int y1=0;y1<height;y1++)
+                        cells[x1][y1]=CellState.NOT_DECIDED;
+                cells[x][y] = flipState(backupCells[x][y]);
+
+                SolveResult res = solveRec();
+                if(res!=SolveResult.IMPOSSIBLE) {
+                    counterExample = new NonogramSolution(cells);
+                    unique = false;
+                }
+            }
+        }
+        cells = backupCells;
+        return unique;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public NonogramSolution getCounterExample() {
+        return counterExample;
     }
 }
