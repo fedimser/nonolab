@@ -1,4 +1,6 @@
-# Nonolab is set of tools for processing nonograms.
+# Nonolab 
+
+Nonolab is set of tools for processing nonograms.
 
 ## Features:
 
