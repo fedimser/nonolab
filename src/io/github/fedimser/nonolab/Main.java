@@ -11,42 +11,32 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import  java.nio.file.Path;
+import java.util.Scanner;
 
 public class Main {
-
-    private static void check1(String name) throws java.io.IOException {
-        Path dir = Paths.get("D:/temp");
-        NonogramSolution sol0 = NonogramSolution.fromFile(new File("D:/temp/" + name + ".non"));
-        NonogramDescription desc = NonogramDescription.fromFile(new File("D:/temp/" + name + ".non"));
-        if(desc.equals(new NonogramDescription(sol0))) {
-            System.out.println("goal OK");
-        } else {
-            System.out.println("goal BAD");
-            //System.exit(1);
-        }
-
-        Solver solver = new Solver(sol0);
-        System.out.println(solver.solve(desc));
-        NonogramSolution sol = solver.getSolution();
-        NonogramDrawer.drawAll(sol, dir, name);
-    }
-
-    private static void check2(int width, int height) {
-        Random random = new Random();
-        Solver solver = new Solver();
-        for(int i=0;i<10000;i++) {
-            NonogramSolution sol = NonogramSolution.random(width,height,random, 0.6);
-            NonogramDescription descr = new NonogramDescription(sol);
-            if(solver.solve(descr)==Solver.SolveResult.IMPOSSIBLE) {
-                System.out.println(sol.toString());
-                System.exit(1);
-            }
-        }
-        System.out.println("OK");
-    }
+    private final static String help = String.join("\n",
+        "exit - exit application.",
+        "help - display help.",
+        "solve <filename>.non - solve nonogram",
+        "create <filename>.txt - create nonogram"
+    );
 
     public static void main(String[] argv) throws Exception {
-        check1("kde");
+        System.out.println("Nonolab by fedimser.");
+        Scanner in = new Scanner(System.in);
+        while(true){
+            String[] input = in.nextLine().split(" ");
+            if(input[0].equals("exit")) {
+                break;
+            } else if(input[0].equals("help")) {
+                System.out.println(help);
+            } else if(input[0].equals("solve")) {
+                System.out.println("Not implemented");
+            } else if(input[0].equals("create")) {
+                System.out.println("Not implemented");
+            }
+
+        }
     }
 
 }

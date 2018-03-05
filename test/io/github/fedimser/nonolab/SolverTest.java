@@ -48,9 +48,8 @@ class SolverTest {
         NonogramDescription descr2 = new NonogramDescription(sol); // Explicit description for goal.
         assertTrue(descr.equals(new NonogramDescription(sol)));
 
-        Solver solver = new Solver();
-        assertEquals(solver.solve(descr), Solver.SolveResult.SOLVED);
-        assertEquals(solver.getSolution(), sol);
+        Solver solver = new Solver(descr);
+        assertEquals(solver.solve(), sol);
         NonogramDrawer.drawAll(sol,testDir, name.substring(0, name.length()-4));
     }
 
@@ -69,6 +68,19 @@ class SolverTest {
         for(String s: sources) {
             fullTest(s, testDir);
         }
+    }
+
+    @Test
+    public void testBackTracking() {
+        NonogramSolution s1 = new NonogramSolution("X \n X");
+        NonogramSolution s2 = new NonogramSolution(" X\nX ");
+        NonogramDescription desc = new NonogramDescription(s1);
+        assertEquals(desc, new NonogramDescription(s2));
+
+        Solver solver = new Solver(desc);
+        NonogramSolution s3 = solver.solve();
+        assertTrue(s3.equals(s1) || s3.equals(s2));
+        assertFalse(solver.hasUniqueSolution());
     }
 
 }

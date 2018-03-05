@@ -80,7 +80,7 @@ public class NonogramDrawer {
 
 
         Font font = new Font("Arial", Font.PLAIN, (int)(CELL_SIZE*0.6));
- 
+
 
         // Draw column descriptions.
         for (int x=0;x<w2; x++) {
