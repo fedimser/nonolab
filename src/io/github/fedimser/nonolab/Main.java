@@ -38,6 +38,8 @@ public class Main {
                 create(input[1]);
             } else if(input[0].equals("check")) {
                 check(input[1]);
+            } else {
+                System.out.println("Unknow command. Type help to see help.");
             }
         }
     }
@@ -52,7 +54,7 @@ public class Main {
             return;
         }
         Solver solver = new Solver(desc);
-        solver.setVerbose(true);
+        // solver.setVerbose(true);
         NonogramSolution sol = solver.solve();
         if(sol==null) {
             System.out.println("No solution.");
