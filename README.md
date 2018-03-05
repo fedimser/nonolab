@@ -2,7 +2,7 @@
 
 Nonolab is set of tools for processing nonograms.
 
-## Features:
+## Features
 
 * Solving nonograms (hints->pixels).
 * Creating nonogram (pixels->hints).
@@ -44,16 +44,16 @@ Run `nonolab` and enter command
 
 Create file abc.txt
 
-		 XX  
+	 XX  
 	 XX X
-	  X X
+		X X
 	 XXX 
 	X X  
 	X X  
-	  XX 
+		XX 
 	 X X 
 	 X XX
-	XX 
+	XX
 	
 Run `nonolab` and enter command
 
