@@ -8,8 +8,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 public class Main {
     private final static String help = String.join("\n",
@@ -21,8 +24,6 @@ public class Main {
     );
 
     public static void main(String[] argv) {
-        check("D:/temp/n1.non");
-
         System.out.println("*** Nonolab by fedimser ***");
         Scanner in = new Scanner(System.in);
         while(true){
@@ -83,7 +84,38 @@ public class Main {
     }
 
     private static void create(String fileName) {
+        File file = new File(fileName);
+        NonogramSolution sol=null;
+        try {
+            String ascii = Files.lines(file.toPath()).collect(Collectors.joining("\n"));
+            sol = new NonogramSolution(ascii);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
+        Path dir = file.getParentFile().toPath();
+        String name = file.getName();
+        if (name.substring(name.length()-4).equals(".txt")) {
+            name = name.substring(0, name.length()-4);
+        }
+
+        try {
+            sol.writeToFile(dir.resolve(name + ".non").toFile());
+            System.out.println("Done!");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return;
+        }
+
+        // Solve pictures.
+        try{
+            NonogramDrawer.drawAll(sol, dir, name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        check(dir.resolve(name + ".non").toString());
     }
 
     private static void check(String fileName) {

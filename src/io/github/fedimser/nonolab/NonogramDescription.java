@@ -3,7 +3,9 @@ package io.github.fedimser.nonolab;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
@@ -168,5 +170,25 @@ public class NonogramDescription {
         return ans;
     }
 
+    public void writeToFile(File file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(String.format("width %d\n", width));
+        writer.write(String.format("height %d\n\n", height));
+        writer.write("columns\n");
+        for(int x=0;x<width;x++) {
+            writer.write(getColumnDescription(x)
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(",")) + "\n");
+        }
+        writer.write("rows\n");
+        for(int y=0;y<height;y++) {
+            writer.write(getRowDescription(y)
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(",")) + "\n");
+        }
+        writer.close();
+    }
 }
 

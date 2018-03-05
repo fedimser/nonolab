@@ -5,7 +5,9 @@ package io.github.fedimser.nonolab;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class NonogramSolution {
                 } else if (c== FILL_MARKER) {
                     pixels[x][y]=true;
                 } else {
-                    throw new IllegalArgumentException("Bad marker.");
+                    throw new IllegalArgumentException("Bad marker: " + c + ".");
                 }
             }
         }
@@ -211,5 +213,22 @@ public class NonogramSolution {
             }
         }
         return true;
+    }
+
+    public void writeToFile(File file) throws IOException {
+        NonogramDescription descr = new NonogramDescription(this);
+        descr.writeToFile(file);
+
+        StringBuilder goal = new StringBuilder("\n\ngoal \"");
+        for(int x=0;x<width;x++) {
+            for(int y=0;y<height;y++) {
+                goal.append(pixels[x][y]?'1':'0');
+            }
+        }
+        goal.append("\"\n");
+
+        FileWriter fw = new FileWriter(file,true); //append.
+        fw.write(goal.toString());
+        fw.close();
     }
 }
